@@ -1,68 +1,80 @@
-/* ---------- Design tokens ---------- */
+/* ---------- Design tokens (soft pastel "Maltese" palette) ---------- */
 :root {
-  --bg: #f6f4f0;
+  --bg: #fbf6ea;
   --surface: #ffffff;
-  --surface-2: #efece6;
-  --text: #1d1f23;
-  --text-2: #5d6168;
-  --text-3: #8a8f98;
-  --border: #e3dfd7;
-  --border-strong: #cfc9bf;
-  --accent: #2f6f5e;
-  --accent-strong: #255a4c;
-  --accent-soft: #e2f0ea;
+  --surface-2: #f3ecdc;
+  --text: #3a3330;
+  --text-2: #6f6660;
+  --text-3: #9a918a;
+  --border: #ece4d3;
+  --border-strong: #d9cfbb;
+  --accent: #3a84ab;
+  --accent-strong: #2f6f91;
+  --accent-soft: #dceff8;
   --accent-text: #ffffff;
-  --danger: #b4362f;
-  --danger-soft: #fbe6e4;
-  --warn: #9a6a00;
-  --warn-soft: #fff1cc;
-  --shadow: 0 1px 2px rgba(20, 20, 30, 0.06), 0 4px 14px rgba(20, 20, 30, 0.05);
-  --radius: 14px;
-  --radius-sm: 9px;
-  --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Inter, 'Helvetica Neue', Arial, sans-serif;
+  --sky: #cfe7f5;
+  --mint: #d6f0e6;
+  --blush: #fbdde3;
+  --danger: #c6584e;
+  --danger-soft: #fde4e0;
+  --warn: #a67a00;
+  --warn-soft: #fff1c9;
+  --pup-shadow: #cfe7f5;
+  --shadow: 0 1px 2px rgba(80, 60, 40, 0.06), 0 6px 18px rgba(80, 60, 40, 0.06);
+  --radius: 18px;
+  --radius-sm: 12px;
+  --font: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   color-scheme: light;
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) {
-    --bg: #15171b;
-    --surface: #1f2126;
-    --surface-2: #272a30;
-    --text: #ececec;
-    --text-2: #b1b5bd;
-    --text-3: #7f848d;
-    --border: #2f333a;
-    --border-strong: #41464f;
-    --accent: #5fb597;
-    --accent-strong: #79c7ab;
-    --accent-soft: #223a33;
-    --accent-text: #0f1a16;
-    --danger: #ef7b74;
-    --danger-soft: #3d2423;
-    --warn: #e5b85a;
-    --warn-soft: #3b3220;
-    --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 4px 14px rgba(0, 0, 0, 0.3);
+    --bg: #1d1b1f;
+    --surface: #27242a;
+    --surface-2: #312d33;
+    --text: #f1ece6;
+    --text-2: #b8b0a8;
+    --text-3: #87807a;
+    --border: #3a353b;
+    --border-strong: #4b454c;
+    --accent: #8fcbe8;
+    --accent-strong: #a9d8ef;
+    --accent-soft: #26394a;
+    --accent-text: #10222e;
+    --sky: #2b4556;
+    --mint: #27463c;
+    --blush: #4a3038;
+    --danger: #f08a80;
+    --danger-soft: #46292a;
+    --warn: #e8c266;
+    --warn-soft: #40361f;
+    --pup-shadow: #2b4556;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 6px 18px rgba(0, 0, 0, 0.3);
     color-scheme: dark;
   }
 }
 :root[data-theme='dark'] {
-  --bg: #15171b;
-  --surface: #1f2126;
-  --surface-2: #272a30;
-  --text: #ececec;
-  --text-2: #b1b5bd;
-  --text-3: #7f848d;
-  --border: #2f333a;
-  --border-strong: #41464f;
-  --accent: #5fb597;
-  --accent-strong: #79c7ab;
-  --accent-soft: #223a33;
-  --accent-text: #0f1a16;
-  --danger: #ef7b74;
-  --danger-soft: #3d2423;
-  --warn: #e5b85a;
-  --warn-soft: #3b3220;
-  --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 4px 14px rgba(0, 0, 0, 0.3);
+  --bg: #1d1b1f;
+  --surface: #27242a;
+  --surface-2: #312d33;
+  --text: #f1ece6;
+  --text-2: #b8b0a8;
+  --text-3: #87807a;
+  --border: #3a353b;
+  --border-strong: #4b454c;
+  --accent: #8fcbe8;
+  --accent-strong: #a9d8ef;
+  --accent-soft: #26394a;
+  --accent-text: #10222e;
+  --sky: #2b4556;
+  --mint: #27463c;
+  --blush: #4a3038;
+  --danger: #f08a80;
+  --danger-soft: #46292a;
+  --warn: #e8c266;
+  --warn-soft: #40361f;
+  --pup-shadow: #2b4556;
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 6px 18px rgba(0, 0, 0, 0.3);
   color-scheme: dark;
 }
 
@@ -96,12 +108,13 @@ p {
   margin: 0;
 }
 h1 {
-  font-size: 1.5rem;
+  font-size: 1.55rem;
+  font-weight: 800;
   letter-spacing: -0.01em;
 }
 h2 {
   font-size: 1.1rem;
-  font-weight: 650;
+  font-weight: 800;
 }
 button,
 input,
@@ -118,6 +131,10 @@ button {
 button:disabled {
   cursor: not-allowed;
   opacity: 0.5;
+}
+a {
+  color: inherit;
+  text-decoration: none;
 }
 :focus-visible {
   outline: 2px solid var(--accent);
@@ -175,7 +192,7 @@ button:disabled {
   padding: 16px 16px 24px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 14px;
 }
 .page-header {
   display: flex;
@@ -190,7 +207,11 @@ button:disabled {
 .page-header .subtitle {
   color: var(--text-2);
   font-size: 0.9rem;
-  margin-top: 2px;
+  margin-top: 1px;
+}
+.header-pup {
+  margin: -6px 0 -6px -6px;
+  flex-shrink: 0;
 }
 .icon-btn {
   width: 40px;
@@ -221,7 +242,7 @@ button:disabled {
   bottom: calc(20px + env(safe-area-inset-bottom));
   width: 58px;
   height: 58px;
-  border-radius: 18px;
+  border-radius: 20px;
   background: var(--accent);
   color: var(--accent-text);
   font-size: 1.9rem;
@@ -229,11 +250,46 @@ button:disabled {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.22);
+  box-shadow: 0 8px 20px rgba(58, 132, 171, 0.35);
   z-index: 15;
 }
 .fab:hover {
   background: var(--accent-strong);
+}
+
+/* ---------- Shopping summary ---------- */
+.summary {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: var(--radius);
+  background: var(--sky);
+  color: var(--text);
+  box-shadow: var(--shadow);
+}
+.summary:hover {
+  filter: brightness(0.98);
+}
+.summary.quiet {
+  background: var(--mint);
+  box-shadow: none;
+}
+.summary-ico {
+  width: 40px;
+  height: 40px;
+  border-radius: 14px;
+  background: var(--surface);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+.summary .chev {
+  font-size: 1.6rem;
+  color: var(--text-2);
+  padding-right: 4px;
 }
 
 /* ---------- Cards & list ---------- */
@@ -262,7 +318,7 @@ button:disabled {
   padding: 10px 10px 10px 14px;
   min-height: 64px;
 }
-.list-item.low.last {
+.list-item.low.low {
   background: color-mix(in srgb, var(--warn-soft) 55%, var(--surface));
 }
 .list-item.low.none {
@@ -277,7 +333,7 @@ button:disabled {
   align-items: flex-start;
 }
 .list-item .name {
-  font-weight: 600;
+  font-weight: 700;
 }
 .list-item .sub {
   color: var(--text-2);
@@ -293,7 +349,7 @@ button:disabled {
 .thumb {
   width: 38px;
   height: 38px;
-  border-radius: 11px;
+  border-radius: 12px;
   background: var(--surface-2);
   display: inline-flex;
   align-items: center;
@@ -301,13 +357,20 @@ button:disabled {
   font-size: 1.15rem;
   flex-shrink: 0;
 }
+.list-end {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 8px 0 4px;
+}
 
 /* ---------- Badges & chips ---------- */
 .badge {
   display: inline-flex;
   align-items: center;
   font-size: 0.72rem;
-  font-weight: 700;
+  font-weight: 800;
   padding: 2px 8px;
   border-radius: 999px;
   background: var(--surface-2);
@@ -342,7 +405,7 @@ button:disabled {
   background: var(--surface);
   color: var(--text-2);
   font-size: 0.86rem;
-  font-weight: 500;
+  font-weight: 700;
   white-space: nowrap;
   min-height: 36px;
 }
@@ -361,7 +424,7 @@ button:disabled {
   min-height: 44px;
   padding: 0 18px;
   border-radius: var(--radius-sm);
-  font-weight: 600;
+  font-weight: 800;
   font-size: 0.95rem;
   border: 1px solid transparent;
   white-space: nowrap;
@@ -396,8 +459,8 @@ button:disabled {
   border-color: var(--danger);
 }
 .btn.sm {
-  min-height: 34px;
-  padding: 0 12px;
+  min-height: 36px;
+  padding: 0 14px;
   font-size: 0.85rem;
 }
 .btn.block {
@@ -436,7 +499,7 @@ button:disabled {
 .stepper .val {
   min-width: 28px;
   text-align: center;
-  font-weight: 700;
+  font-weight: 800;
   font-size: 1.05rem;
   font-variant-numeric: tabular-nums;
 }
@@ -453,7 +516,7 @@ button:disabled {
 .field label,
 .field .label {
   font-size: 0.86rem;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--text-2);
 }
 .field .hint {
@@ -463,7 +526,7 @@ button:disabled {
 .error {
   font-size: 0.85rem;
   color: var(--danger);
-  font-weight: 500;
+  font-weight: 700;
 }
 .input,
 select.input {
@@ -494,6 +557,7 @@ select.input {
 }
 .search .input {
   padding-left: 38px;
+  border-radius: 999px;
 }
 .search .ico {
   position: absolute;
@@ -508,14 +572,14 @@ select.input {
   align-items: flex-start;
   padding: 10px 12px;
   border-radius: var(--radius-sm);
-  background: var(--warn-soft);
-  color: var(--warn);
+  background: var(--blush);
+  color: var(--text);
 }
 
 /* ---------- Empty state ---------- */
 .empty {
   text-align: center;
-  padding: 36px 20px;
+  padding: 32px 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -525,9 +589,13 @@ select.input {
 .empty .ico {
   font-size: 2.6rem;
 }
+.empty .illus {
+  margin: -8px 0 -4px;
+}
 .empty h3 {
   color: var(--text);
-  font-size: 1.05rem;
+  font-size: 1.1rem;
+  font-weight: 800;
   margin: 0;
 }
 .empty .actions {
@@ -553,7 +621,7 @@ select.input {
   gap: 1px;
   padding: 12px 14px;
   text-align: left;
-  font-weight: 600;
+  font-weight: 700;
   width: 100%;
 }
 .menu-item + .menu-item {
@@ -570,7 +638,7 @@ select.input {
 .backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.45);
+  background: rgba(58, 51, 48, 0.45);
   display: flex;
   align-items: flex-end;
   justify-content: center;
@@ -583,7 +651,7 @@ select.input {
   max-height: 92dvh;
   overflow-y: auto;
   background: var(--surface);
-  border-radius: 20px 20px 0 0;
+  border-radius: 24px 24px 0 0;
   padding: 18px 18px calc(18px + env(safe-area-inset-bottom));
   display: flex;
   flex-direction: column;
@@ -596,7 +664,7 @@ select.input {
     padding: 24px;
   }
   .sheet {
-    border-radius: 20px;
+    border-radius: 24px;
   }
 }
 @keyframes slide-up {
@@ -630,17 +698,28 @@ select.input {
   background: var(--text);
   color: var(--bg);
   padding: 12px 16px;
-  border-radius: 12px;
+  border-radius: 14px;
   font-size: 0.92rem;
+  font-weight: 600;
   display: flex;
   align-items: center;
   gap: 12px;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
-  animation: slide-up 0.2s ease-out;
+  /* Fade only: the Undo button must never be offset from where it is drawn. */
+  animation: fade 0.2s ease-out;
+}
+@media (prefers-reduced-motion: reduce) {
+  .toast,
+  .sheet,
+  .backdrop {
+    animation: none;
+  }
 }
 .toast button {
-  color: #9bd7c0;
-  font-weight: 700;
+  color: #a9d8ef;
+  font-weight: 800;
+  padding: 4px 6px;
+  margin: -4px -6px;
 }
 
 @media (hover: none) {

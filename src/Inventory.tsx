@@ -3,23 +3,13 @@ import { useMemo, useState } from 'react';
 import { EmptyState } from './components/EmptyState';
 import { MenuSheet } from './MenuSheet';
 import { ProductSheet } from './ProductSheet';
+import { Pup } from './components/Pup';
 import { QuantityStepper } from './components/QuantityStepper';
 import { useToast } from './components/Toast';
 import { db } from './db';
-import { changeQuantity } from './lib/products';
+import { changeQuantity, lowLevel, needsBuying, sortLowFirst } from './lib/products';
 import { loadSampleProducts } from './lib/sample';
 import type { Category, Product } from './types';
-
-/** 0 left = none, 1 left = last one. Both count as "low" and float to the top of every list. */
-export function lowLevel(p: Product): 'none' | 'last' | null {
-  if (p.quantity <= 0) return 'none';
-  if (p.quantity === 1) return 'last';
-  return null;
-}
-
-function sortLowFirst(a: Product, b: Product) {
-  return a.quantity - b.quantity || a.name.localeCompare(b.name);
-}
 
 export function Inventory() {
   const toast = useToast();
@@ -43,7 +33,7 @@ export function Inventory() {
 
   if (products === undefined) return <div className="page" />;
 
-  const outCount = products.filter((p) => p.quantity <= 0).length;
+  const toBuy = products.filter(needsBuying).length;
   const usedCategories = categories.filter((c) => products.some((p) => p.categoryId === c.id));
 
   async function loadSamples() {
@@ -54,13 +44,10 @@ export function Inventory() {
   return (
     <div className="page">
       <header className="page-header">
+        <Pup size={52} className="header-pup" />
         <div className="title">
           <h1>My shelf</h1>
-          <div className="subtitle">
-            {products.length === 0
-              ? 'Nothing added yet'
-              : `${products.length} product${products.length === 1 ? '' : 's'}${outCount ? ` · ${outCount} run out` : ''}`}
-          </div>
+          <div className="subtitle">{products.length === 0 ? 'Nothing added yet' : `${products.length} product${products.length === 1 ? '' : 's'}`}</div>
         </div>
         <button className="icon-btn" aria-label="Menu" onClick={() => setMenuOpen(true)}>
           ⋯
@@ -69,7 +56,7 @@ export function Inventory() {
 
       {products.length === 0 ? (
         <EmptyState
-          icon="🧴"
+          illustration={<Pup size={120} />}
           title="Your shelf is empty"
           message="Add the products you own and use − and + as you use them up or buy more."
           actions={
@@ -85,6 +72,32 @@ export function Inventory() {
         />
       ) : (
         <>
+          {toBuy > 0 ? (
+            <a href="#shopping" className="summary">
+              <span className="summary-ico" aria-hidden>
+                🛒
+              </span>
+              <span className="grow">
+                <strong>
+                  {toBuy} item{toBuy === 1 ? '' : 's'} to buy
+                </strong>
+                <span className="small muted" style={{ display: 'block' }}>
+                  Open the shopping list
+                </span>
+              </span>
+              <span className="chev" aria-hidden>
+                ›
+              </span>
+            </a>
+          ) : (
+            <div className="summary quiet">
+              <span className="summary-ico" aria-hidden>
+                🐾
+              </span>
+              <span className="grow small muted">Nothing to buy right now. Everything is stocked.</span>
+            </div>
+          )}
+
           <div className="sticky-top stack" style={{ gap: 10 }}>
             <div className="search">
               <span className="ico" aria-hidden>
@@ -122,13 +135,19 @@ export function Inventory() {
               }
             />
           ) : (
-            <div className="card pad-0">
-              <div className="list">
-                {visible.map((p) => (
-                  <Row key={p.id} p={p} category={byId.get(p.categoryId)} showCategory={!category} onEdit={() => setEditing(p)} />
-                ))}
+            <>
+              <div className="card pad-0">
+                <div className="list">
+                  {visible.map((p) => (
+                    <Row key={p.id} p={p} category={byId.get(p.categoryId)} showCategory={!category} onEdit={() => setEditing(p)} />
+                  ))}
+                </div>
               </div>
-            </div>
+              <div className="list-end">
+                <Pup size={56} />
+                <span className="small muted">That’s everything on your shelf.</span>
+              </div>
+            </>
           )}
         </>
       )}
@@ -162,7 +181,7 @@ function Row({ p, category, showCategory, onEdit }: { p: Product; category: Cate
         <div className="main">
           <span className="name clamp2">{p.name}</span>
           {sub && <span className="sub">{sub}</span>}
-          {low && <span className={`badge ${low === 'none' ? 'danger' : 'warn'}`}>{low === 'none' ? 'None left' : 'Last one'}</span>}
+          {low && <span className={`badge ${low === 'none' ? 'danger' : 'warn'}`}>{low === 'none' ? 'None left' : 'Running low'}</span>}
         </div>
       </button>
       <div className="qty">

@@ -47,6 +47,7 @@ export async function importBackup(text: string): Promise<number> {
     brand: String(p.brand ?? ''),
     categoryId: String(p.categoryId ?? 'other'),
     quantity: Math.max(0, Number(p.quantity) || 0),
+    minQuantity: Math.max(1, Number(p.minQuantity) || 1),
     unit: String(p.unit ?? ''),
     isSample: Boolean(p.isSample),
     createdAt: Number(p.createdAt) || Date.now(),

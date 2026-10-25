@@ -4,7 +4,7 @@ import { Field } from './components/Field';
 import { ConfirmDialog, Sheet } from './components/Modal';
 import { useToast } from './components/Toast';
 import { db, newId } from './db';
-import { UNIT_SUGGESTIONS, createProduct, deleteProduct, distinct, emptyProduct, updateProduct, type ProductInput } from './lib/products';
+import { UNIT_SUGGESTIONS, createProduct, deleteProduct, distinct, emptyProduct, minOf, restoreProduct, updateProduct, type ProductInput } from './lib/products';
 import type { Category, Product } from './types';
 
 interface Props {
@@ -20,7 +20,9 @@ export function ProductSheet({ open, product, categories, defaultCategoryId, onC
   const toast = useToast();
   const all = useLiveQuery(() => db.products.toArray(), [], [] as Product[]);
   const [form, setForm] = useState<ProductInput>(() =>
-    product ? { name: product.name, brand: product.brand, categoryId: product.categoryId, quantity: product.quantity, unit: product.unit } : emptyProduct(defaultCategoryId),
+    product
+      ? { name: product.name, brand: product.brand, categoryId: product.categoryId, quantity: product.quantity, minQuantity: minOf(product), unit: product.unit }
+      : emptyProduct(defaultCategoryId),
   );
   const [newCategory, setNewCategory] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -44,6 +46,7 @@ export function ProductSheet({ open, product, categories, defaultCategoryId, onC
     const name = form.name.trim();
     if (!name) return setError('Give the product a name.');
     if (!Number.isInteger(form.quantity) || form.quantity < 0) return setError('Quantity must be a whole number of 0 or more.');
+    if (!Number.isInteger(form.minQuantity) || form.minQuantity < 1) return setError('“Buy more when fewer than” must be 1 or more.');
     if (newCategory !== null && !newCategory.trim()) return setError('Enter a name for the new category.');
     setSaving(true);
     try {
@@ -76,11 +79,18 @@ export function ProductSheet({ open, product, categories, defaultCategoryId, onC
 
   async function remove() {
     if (!product) return;
+    const snapshot = product;
     setConfirmDelete(false);
-    await deleteProduct(product.id);
-    toast.show(`"${product.name}" deleted.`);
+    await deleteProduct(snapshot.id);
     onClose();
+    toast.show(`"${snapshot.name}" deleted.`, {
+      actionLabel: 'Undo',
+      duration: 6000,
+      onAction: () => void restoreProduct(snapshot),
+    });
   }
+
+  const numOrZero = (v: string) => (v === '' ? 0 : Number(v));
 
   return (
     <>
@@ -90,8 +100,8 @@ export function ProductSheet({ open, product, categories, defaultCategoryId, onC
             <input id="p-name" className={`input ${error && !form.name.trim() ? 'invalid' : ''}`} value={form.name} onChange={(e) => patch('name', e.target.value)} placeholder="e.g. Toothpaste" autoFocus={!product} />
           </Field>
           {duplicate && (
-            <div className="notice warn small">
-              <span>⚠️</span>
+            <div className="notice small">
+              <span>🐶</span>
               <span>You already have “{duplicate.name}”. You may just want to use + on that one instead.</span>
             </div>
           )}
@@ -124,7 +134,7 @@ export function ProductSheet({ open, product, categories, defaultCategoryId, onC
           </Field>
           <div className="grid-2">
             <Field label="How many you have" htmlFor="p-qty">
-              <input id="p-qty" className="input" type="number" inputMode="numeric" min={0} step={1} value={form.quantity} onChange={(e) => patch('quantity', e.target.value === '' ? 0 : Number(e.target.value))} />
+              <input id="p-qty" className="input" type="number" inputMode="numeric" min={0} step={1} value={form.quantity} onChange={(e) => patch('quantity', numOrZero(e.target.value))} />
             </Field>
             <Field label="Unit (optional)" htmlFor="p-unit">
               <input id="p-unit" className="input" list="unit-options" value={form.unit} onChange={(e) => patch('unit', e.target.value)} placeholder="e.g. tubes" />
@@ -135,6 +145,9 @@ export function ProductSheet({ open, product, categories, defaultCategoryId, onC
               </datalist>
             </Field>
           </div>
+          <Field label="Buy more when fewer than" htmlFor="p-min" hint="1 = only when it runs out. Use 2 to always keep a spare. Anything below this shows as running low and goes on the shopping list.">
+            <input id="p-min" className="input" type="number" inputMode="numeric" min={1} step={1} value={form.minQuantity} onChange={(e) => patch('minQuantity', numOrZero(e.target.value))} style={{ maxWidth: 140 }} />
+          </Field>
 
           {error && (
             <div className="error" role="alert">
@@ -161,7 +174,7 @@ export function ProductSheet({ open, product, categories, defaultCategoryId, onC
       <ConfirmDialog
         open={confirmDelete}
         title="Delete this product?"
-        message={`"${product?.name}" will be removed from your shelf. This cannot be undone.`}
+        message={`"${product?.name}" will be removed from your shelf. You can undo for a few seconds afterwards.`}
         confirmLabel="Delete"
         danger
         onConfirm={remove}

@@ -3,9 +3,8 @@
 **Use it:** https://torbanana.github.io/shelf-stocktake/ (open on your phone, then "Add to Home Screen").
 Source: https://github.com/torbanana/shelf-stocktake. Every push to `main` redeploys automatically.
 
-One screen that lists what you own, grouped by category, with **−** and **+** on every row.
-Items that have run out (0) or are on their last one (1) float to the top of every tab and are
-highlighted, so you can see at a glance what to buy.
+A list of what you own with **−** and **+** on every row, a shopping list made from whatever has
+run low, and a small Maltese pup keeping an eye on it all.
 
 ## Run it
 
@@ -20,16 +19,20 @@ Open it on your phone by visiting your computer's address on the same Wi-Fi
 
 ## What it does
 
-- **List of products** with name, brand (optional), category, quantity and an optional unit
-  (tubes, bottles…).
-- **− / +** on each row to record using something up or buying more. Never goes below 0.
-- **Low items first**: every tab (All, Makeup, Skincare, …) is sorted by quantity, so 0s come
-  first (red, "None left"), then 1s (amber, "Last one"), then everything else alphabetically.
-- **Search** by name or brand, and **category tabs**.
-- **Tap a product** to edit or delete it (delete asks for confirmation).
-- **Add** with the + button. You can create your own categories from the category dropdown.
+- **My shelf**: every product with name, brand (optional), category, quantity and an optional unit.
+  **−** / **+** on each row to record using something up or buying more. Never goes below 0.
+- **Buy more when fewer than**: each product has a number (default 1). Below it, the product is
+  "running low"; at 0 it is "none left". Both float to the top of every tab and are highlighted.
+  Everything else is alphabetical.
+- **Shopping list**: a card at the top says how many items need buying and opens the shopping
+  page. It lists exactly the low products with how many to buy. **Bought** tops a product back up
+  to its minimum and it drops off the list. The phone's back button returns to the shelf.
+- **Undo**: deleting a product or marking something bought shows a toast with Undo for a few seconds.
+- **Search** by name or brand, and **category tabs**. Tap a product to edit or delete it.
+- **Add** with the + button. Create your own categories from the category dropdown.
 - **⋯ menu**: load/remove sample products, export a JSON backup, restore a backup, delete everything.
-- No server or account needed; your data stays on the device. Follows your phone's light/dark setting.
+- Soft pastel look, light and dark, with the pup as the app icon (PNG icons for Home Screen).
+- No server or account needed; your data stays on the device.
 
 ## Technical notes
 
@@ -43,25 +46,26 @@ Open it on your phone by visiting your computer's address on the same Wi-Fi
 
 ## Things deliberately left out (easy to add later)
 
-Expiry dates, storage location, minimum-stock thresholds per product, shopping list,
-stocktake mode, product photos, image recognition and barcode scanning were all removed
-to keep the app to a single, fast screen. The data model is small, so any of these can be
-added back as a column on `Product` plus a field in `src/ProductSheet.tsx`.
+Expiry dates, storage location, stocktake mode, product photos, image recognition, barcode
+scanning and free-text shopping items were left out to keep the app small. The data model is
+tiny, so any of these can be added as a column on `Product` plus a field in `src/ProductSheet.tsx`.
 
 ## Layout
 
 ```
 src/
-  main.tsx          entry
-  App.tsx           shell
-  Inventory.tsx     the one screen: header, search, category tabs, sorted list, + button
-  ProductSheet.tsx  add / edit / delete form (bottom sheet)
-  MenuSheet.tsx     samples, backup, delete-all
-  db.ts             Dexie database + default categories
-  types.ts          Product and Category types
-  lib/products.ts   create / update / change quantity / delete
-  lib/sample.ts     sample products
-  lib/backup.ts     export / import JSON
-  components/       Sheet + ConfirmDialog, Toast, QuantityStepper, EmptyState, Field
-  styles.css        design tokens (light + dark) and components
+  main.tsx            entry
+  App.tsx             two screens switched by the URL hash (#shopping)
+  Inventory.tsx       the shelf: header, shopping card, search, category tabs, sorted list, + button
+  Shopping.tsx        the shopping list page
+  ProductSheet.tsx    add / edit / delete form (bottom sheet)
+  MenuSheet.tsx       samples, backup, delete-all
+  db.ts               Dexie database + default categories
+  types.ts            Product and Category types
+  lib/products.ts     create / update / change quantity / low-stock rules / sorting
+  lib/sample.ts       sample products
+  lib/backup.ts       export / import JSON
+  components/         Pup (mascot SVG), Sheet + ConfirmDialog, Toast, QuantityStepper, EmptyState, Field
+  styles.css          design tokens (light + dark) and components
+public/               favicon.svg (the pup) and PNG icons generated from it
 ```

@@ -1,0 +1,33 @@
+/**
+ * A little white Maltese lying down, drawn to match the app icon.
+ * Pure SVG, so it stays crisp at any size and in dark mode.
+ */
+export function Pup({ size = 64, className = '' }: { size?: number; className?: string }) {
+  return (
+    <svg className={className} width={size} height={size} viewBox="0 0 64 64" aria-hidden focusable="false">
+      <ellipse cx="34" cy="51" rx="24" ry="4" fill="var(--pup-shadow, #cfe7f5)" />
+      <g stroke="#4a3a33" strokeWidth="1.6" strokeLinejoin="round" strokeLinecap="round" fill="#fff">
+        <circle cx="55" cy="39" r="4.6" />
+        <ellipse cx="29" cy="38" rx="4.6" ry="7.5" transform="rotate(12 29 38)" />
+        <path d="M22 44c0-7 7-12 17-12s16 5 16 12-6 8-16 8-17-1-17-8z" />
+        <circle cx="20" cy="36" r="11.5" />
+        <ellipse cx="10.5" cy="40" rx="4.6" ry="7.5" transform="rotate(-10 10.5 40)" />
+        <ellipse cx="25" cy="50.5" rx="4.5" ry="2.6" />
+        <ellipse cx="34" cy="51.5" rx="4.5" ry="2.6" />
+      </g>
+      <g fill="#f4a6b8" stroke="#4a3a33" strokeWidth="1.2" strokeLinejoin="round">
+        <path d="M17 25.5l-4.5-2.2v4.8z" />
+        <path d="M20 25.5l4.5-2.2v4.8z" />
+        <circle cx="18.5" cy="25.5" r="1.4" />
+      </g>
+      <g fill="#3b2f2a">
+        <circle cx="16.5" cy="35.5" r="1.3" />
+        <circle cx="22.5" cy="35.5" r="1.3" />
+        <ellipse cx="19.5" cy="39.2" rx="1.9" ry="1.4" />
+      </g>
+      <path d="M17.8 41.3q1.7 1.6 3.4 0" fill="none" stroke="#3b2f2a" strokeWidth="1" strokeLinecap="round" />
+      <circle cx="13.5" cy="39.5" r="1.8" fill="#f6b4c0" opacity=".8" />
+      <circle cx="25.5" cy="39.5" r="1.8" fill="#f6b4c0" opacity=".8" />
+    </svg>
+  );
+}

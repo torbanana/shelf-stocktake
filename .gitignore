@@ -1,3 +1,8 @@
 node_modules
 dist
 *.local
+
+# reference images kept locally only
+/*.png
+/*.jpg
+*.tsbuildinfo
