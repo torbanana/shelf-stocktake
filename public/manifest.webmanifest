@@ -1,0 +1,9 @@
+{
+  "name": "Shelf – personal-care stocktake",
+  "short_name": "Shelf",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#f6f4f0",
+  "theme_color": "#2f6f5e",
+  "icons": [{ "src": "./favicon.svg", "sizes": "any", "type": "image/svg+xml" }]
+}
