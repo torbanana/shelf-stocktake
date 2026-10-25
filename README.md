@@ -1,5 +1,8 @@
 # Shelf – a simple personal-care stocktake
 
+**Use it:** https://torbanana.github.io/shelf-stocktake/ (open on your phone, then "Add to Home Screen").
+Source: https://github.com/torbanana/shelf-stocktake. Every push to `main` redeploys automatically.
+
 One screen that lists what you own, grouped by category, with **−** and **+** on every row.
 Items that have run out (0) or are on their last one (1) float to the top of every tab and are
 highlighted, so you can see at a glance what to buy.
