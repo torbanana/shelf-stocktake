@@ -1,7 +1,6 @@
 import { useLiveQuery } from 'dexie-react-hooks';
 import { useMemo, useState } from 'react';
 import { EmptyState } from './components/EmptyState';
-import { Pup } from './components/Pup';
 import { Sky } from './components/Sky';
 import { TopBar } from './components/TopBar';
 import { useToast } from './components/Toast';
@@ -75,7 +74,7 @@ export function Overview() {
           </div>
           <div className="hero-sub">{stats.total === 0 ? 'Add what you own to get started.' : `${stats.total} product${stats.total === 1 ? '' : 's'} on your shelf`}</div>
         </div>
-        <Pup size={118} className="hero-pup" />
+        <img src={`${import.meta.env.BASE_URL}dogs.png`} alt="" className="hero-dogs" draggable={false} />
       </section>
 
       {stats.total === 0 ? (

@@ -36,8 +36,8 @@ export function Sky({ className = '' }: { className?: string }) {
     <svg className={className} viewBox="0 0 360 210" preserveAspectRatio="xMidYMax slice" aria-hidden focusable="false">
       <defs>
         <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#141c3f" />
-          <stop offset="1" stopColor="#2b3a74" />
+          <stop offset="0" stopColor="#1b2748" />
+          <stop offset="1" stopColor="#39506c" />
         </linearGradient>
         <linearGradient id="trail" x1="0" y1="0" x2="1" y2="0">
           <stop offset="0" stopColor="#ffd54f" stopOpacity="0" />
@@ -64,9 +64,9 @@ export function Sky({ className = '' }: { className?: string }) {
         <path d="M296 178c6-18 30-22 44-10 8-10 30-8 34 6v12h-78z" />
       </g>
       {/* hill */}
-      <path d="M-10 190 Q180 138 370 190 L370 220 L-10 220 Z" fill="#3a9a7c" />
-      <path d="M-10 198 Q180 148 370 198 L370 220 L-10 220 Z" fill="#2f8768" opacity=".6" />
-      <g stroke="#1f6b50" strokeWidth="1.6" strokeLinecap="round">
+      <path d="M-10 190 Q180 138 370 190 L370 220 L-10 220 Z" fill="#3a647a" />
+      <path d="M-10 198 Q180 148 370 198 L370 220 L-10 220 Z" fill="#2f5566" opacity=".6" />
+      <g stroke="#24495a" strokeWidth="1.6" strokeLinecap="round">
         <path d="M40 182l2-6M46 184l1-5M120 168l2-6M126 170l1-5M300 172l2-6M306 174l1-5" />
       </g>
       <circle cx="70" cy="188" r="9" fill="url(#glow)" />

@@ -90,7 +90,9 @@ src/
   lib/undo.ts           the undo stack
   lib/sample.ts         sample products
   lib/backup.ts         export / import JSON
-  components/           Pup (mascot), Sky (hero art), TopBar (with Undo), BottomNav, Sheet, Toast, …
+  components/           Pup (shows the dog pictures), Sky (hero sky art), TopBar (with Undo), BottomNav, Sheet, Toast, …
   styles.css            starry-night tokens and components
-public/                 favicon.svg (the pup) and PNG icons generated from it
+public/                 dogs.png / dog-white.png (the reference picture of the two dogs) and the app icons made from it
 ```
+
+The dog artwork is the picture supplied by the owner of this app; the sky, stars and hill behind it are drawn in SVG.
