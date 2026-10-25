@@ -13,6 +13,8 @@ export interface Product {
   minQuantity: number;
   /** Optional label such as "tubes" or "bottles". */
   unit: string;
+  /** Optional link to where you buy it, shown on the shopping list. */
+  purchaseUrl: string;
   isSample: boolean;
   createdAt: number;
   updatedAt: number;

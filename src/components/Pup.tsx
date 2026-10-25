@@ -1,33 +1,56 @@
 /**
- * A little white Maltese lying down, drawn to match the app icon.
- * Pure SVG, so it stays crisp at any size and in dark mode.
+ * The fluffy blue Maltese, drawn to match the reference art: cloud-shaped fluff, one thick black
+ * outline, dot eyes, a little nose and a happy open mouth. Same drawing as the app icon.
+ *
+ * The outline is made by drawing every blob twice: first fat and black, then blue on top, so the
+ * shapes merge into one silhouette with a single outer line.
  */
+const SHAPES = (
+  <>
+    <circle cx="58" cy="44" r="24" />
+    <circle cx="42" cy="32" r="12" />
+    <circle cx="56" cy="24" r="12" />
+    <circle cx="71" cy="30" r="11" />
+    <circle cx="80" cy="45" r="10" />
+    <circle cx="40" cy="50" r="10" />
+    <ellipse cx="29" cy="58" rx="10" ry="17" />
+    <circle cx="36" cy="60" r="9" />
+    <ellipse cx="89" cy="58" rx="9" ry="15" />
+    <circle cx="82" cy="60" r="9" />
+    <rect x="34" y="60" width="50" height="36" rx="16" />
+    <circle cx="38" cy="76" r="11" />
+    <circle cx="80" cy="78" r="11" />
+    <rect x="40" y="80" width="42" height="14" />
+    <rect x="36" y="86" width="13" height="18" rx="5.5" />
+    <rect x="50" y="88" width="12" height="17" rx="5.5" />
+    <rect x="64" y="88" width="12" height="17" rx="5.5" />
+    <rect x="78" y="86" width="12" height="17" rx="5.5" />
+    <circle cx="97" cy="70" r="6.5" />
+    <circle cx="102" cy="64" r="5" />
+  </>
+);
+
 export function Pup({ size = 64, className = '' }: { size?: number; className?: string }) {
   return (
-    <svg className={className} width={size} height={size} viewBox="0 0 64 64" aria-hidden focusable="false">
-      <ellipse cx="34" cy="51" rx="24" ry="4" fill="var(--pup-shadow, #cfe7f5)" />
-      <g stroke="#4a3a33" strokeWidth="1.6" strokeLinejoin="round" strokeLinecap="round" fill="#fff">
-        <circle cx="55" cy="39" r="4.6" />
-        <ellipse cx="29" cy="38" rx="4.6" ry="7.5" transform="rotate(12 29 38)" />
-        <path d="M22 44c0-7 7-12 17-12s16 5 16 12-6 8-16 8-17-1-17-8z" />
-        <circle cx="20" cy="36" r="11.5" />
-        <ellipse cx="10.5" cy="40" rx="4.6" ry="7.5" transform="rotate(-10 10.5 40)" />
-        <ellipse cx="25" cy="50.5" rx="4.5" ry="2.6" />
-        <ellipse cx="34" cy="51.5" rx="4.5" ry="2.6" />
+    <svg className={className} width={size} height={size} viewBox="0 0 120 120" aria-hidden focusable="false">
+      <g fill="#1b1b1b" stroke="#1b1b1b" strokeWidth="7" strokeLinejoin="round">
+        {SHAPES}
       </g>
-      <g fill="#f4a6b8" stroke="#4a3a33" strokeWidth="1.2" strokeLinejoin="round">
-        <path d="M17 25.5l-4.5-2.2v4.8z" />
-        <path d="M20 25.5l4.5-2.2v4.8z" />
-        <circle cx="18.5" cy="25.5" r="1.4" />
+      <g fill="#a9c9ea">{SHAPES}</g>
+      <g stroke="#1b1b1b" strokeWidth="3" strokeLinecap="round">
+        <path d="M49.5 92v11M63.5 93v10M77.5 92v11" />
       </g>
-      <g fill="#3b2f2a">
-        <circle cx="16.5" cy="35.5" r="1.3" />
-        <circle cx="22.5" cy="35.5" r="1.3" />
-        <ellipse cx="19.5" cy="39.2" rx="1.9" ry="1.4" />
+      <ellipse cx="52" cy="33" rx="12" ry="7.5" fill="#d6e7f6" />
+      <g fill="#1b1b1b">
+        <circle cx="49" cy="45" r="2.5" />
+        <circle cx="66" cy="45" r="2.5" />
+        <path d="M54 50h7a1.5 1.5 0 0 1 1.2 2.3l-3.5 4a1.5 1.5 0 0 1-2.4 0l-3.5-4A1.5 1.5 0 0 1 54 50z" />
+        <path d="M50 58q7.5 10 15 0z" />
       </g>
-      <path d="M17.8 41.3q1.7 1.6 3.4 0" fill="none" stroke="#3b2f2a" strokeWidth="1" strokeLinecap="round" />
-      <circle cx="13.5" cy="39.5" r="1.8" fill="#f6b4c0" opacity=".8" />
-      <circle cx="25.5" cy="39.5" r="1.8" fill="#f6b4c0" opacity=".8" />
+      <path d="M53.5 59.5q4 5 8 0z" fill="#f08da0" />
+      <g fill="none" stroke="#1b1b1b" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M43 73l2.5-3 2.5 3M69 86l2.5-3 2.5 3M57 71l2.5-3 2.5 3" />
+      </g>
     </svg>
   );
 }

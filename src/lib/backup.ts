@@ -49,6 +49,7 @@ export async function importBackup(text: string): Promise<number> {
     quantity: Math.max(0, Number(p.quantity) || 0),
     minQuantity: Math.max(1, Number(p.minQuantity) || 1),
     unit: String(p.unit ?? ''),
+    purchaseUrl: typeof p.purchaseUrl === 'string' ? p.purchaseUrl : '',
     isSample: Boolean(p.isSample),
     createdAt: Number(p.createdAt) || Date.now(),
     updatedAt: Number(p.updatedAt) || Date.now(),

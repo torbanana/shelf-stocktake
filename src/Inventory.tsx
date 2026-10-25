@@ -1,24 +1,24 @@
 import { useLiveQuery } from 'dexie-react-hooks';
 import { useMemo, useState } from 'react';
 import { EmptyState } from './components/EmptyState';
-import { MenuSheet } from './MenuSheet';
 import { ProductSheet } from './ProductSheet';
 import { Pup } from './components/Pup';
 import { QuantityStepper } from './components/QuantityStepper';
+import { TopBar } from './components/TopBar';
 import { useToast } from './components/Toast';
 import { db } from './db';
-import { changeQuantity, lowLevel, needsBuying, sortLowFirst } from './lib/products';
+import { changeQuantity, lowLevel, sortLowFirst } from './lib/products';
 import { loadSampleProducts } from './lib/sample';
 import type { Category, Product } from './types';
 
-export function Inventory() {
+/** The Products tab: everything you own, low items first, with − / + on every row. */
+export function Inventory({ initialCategory = '' }: { initialCategory?: string }) {
   const toast = useToast();
   const products = useLiveQuery(() => db.products.toArray(), [], undefined);
   const categories = useLiveQuery(() => db.categories.orderBy('sortOrder').toArray(), [], [] as Category[]);
   const [query, setQuery] = useState('');
-  const [category, setCategory] = useState('');
+  const [category, setCategory] = useState(initialCategory);
   const [editing, setEditing] = useState<Product | null | 'new'>(null);
-  const [menuOpen, setMenuOpen] = useState(false);
 
   const byId = useMemo(() => new Map(categories.map((c) => [c.id, c])), [categories]);
 
@@ -33,26 +33,16 @@ export function Inventory() {
 
   if (products === undefined) return <div className="page" />;
 
-  const toBuy = products.filter(needsBuying).length;
   const usedCategories = categories.filter((c) => products.some((p) => p.categoryId === c.id));
 
   async function loadSamples() {
     const n = await loadSampleProducts();
-    toast.show(`${n} sample products added. Remove them from the ⋯ menu when you like.`);
+    toast.show(`${n} sample products added.`);
   }
 
   return (
     <div className="page">
-      <header className="page-header">
-        <Pup size={52} className="header-pup" />
-        <div className="title">
-          <h1>My shelf</h1>
-          <div className="subtitle">{products.length === 0 ? 'Nothing added yet' : `${products.length} product${products.length === 1 ? '' : 's'}`}</div>
-        </div>
-        <button className="icon-btn" aria-label="Menu" onClick={() => setMenuOpen(true)}>
-          ⋯
-        </button>
-      </header>
+      <TopBar title="Products" subtitle={products.length === 0 ? 'Nothing added yet' : `${products.length} product${products.length === 1 ? '' : 's'}`} />
 
       {products.length === 0 ? (
         <EmptyState
@@ -72,32 +62,6 @@ export function Inventory() {
         />
       ) : (
         <>
-          {toBuy > 0 ? (
-            <a href="#shopping" className="summary">
-              <span className="summary-ico" aria-hidden>
-                🛒
-              </span>
-              <span className="grow">
-                <strong>
-                  {toBuy} item{toBuy === 1 ? '' : 's'} to buy
-                </strong>
-                <span className="small muted" style={{ display: 'block' }}>
-                  Open the shopping list
-                </span>
-              </span>
-              <span className="chev" aria-hidden>
-                ›
-              </span>
-            </a>
-          ) : (
-            <div className="summary quiet">
-              <span className="summary-ico" aria-hidden>
-                🐾
-              </span>
-              <span className="grow small muted">Nothing to buy right now. Everything is stocked.</span>
-            </div>
-          )}
-
           <div className="sticky-top stack" style={{ gap: 10 }}>
             <div className="search">
               <span className="ico" aria-hidden>
@@ -144,7 +108,7 @@ export function Inventory() {
                 </div>
               </div>
               <div className="list-end">
-                <Pup size={56} />
+                <Pup size={52} />
                 <span className="small muted">That’s everything on your shelf.</span>
               </div>
             </>
@@ -164,7 +128,6 @@ export function Inventory() {
         defaultCategoryId={category || 'other'}
         onClose={() => setEditing(null)}
       />
-      <MenuSheet open={menuOpen} onClose={() => setMenuOpen(false)} products={products} />
     </div>
   );
 }

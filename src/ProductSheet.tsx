@@ -4,7 +4,8 @@ import { Field } from './components/Field';
 import { ConfirmDialog, Sheet } from './components/Modal';
 import { useToast } from './components/Toast';
 import { db, newId } from './db';
-import { UNIT_SUGGESTIONS, createProduct, deleteProduct, distinct, emptyProduct, minOf, restoreProduct, updateProduct, type ProductInput } from './lib/products';
+import { UNIT_SUGGESTIONS, createProduct, deleteProduct, distinct, emptyProduct, minOf, normalizeUrl, updateProduct, type ProductInput } from './lib/products';
+import { undoEntry } from './lib/undo';
 import type { Category, Product } from './types';
 
 interface Props {
@@ -21,7 +22,15 @@ export function ProductSheet({ open, product, categories, defaultCategoryId, onC
   const all = useLiveQuery(() => db.products.toArray(), [], [] as Product[]);
   const [form, setForm] = useState<ProductInput>(() =>
     product
-      ? { name: product.name, brand: product.brand, categoryId: product.categoryId, quantity: product.quantity, minQuantity: minOf(product), unit: product.unit }
+      ? {
+          name: product.name,
+          brand: product.brand,
+          categoryId: product.categoryId,
+          quantity: product.quantity,
+          minQuantity: minOf(product),
+          unit: product.unit,
+          purchaseUrl: product.purchaseUrl ?? '',
+        }
       : emptyProduct(defaultCategoryId),
   );
   const [newCategory, setNewCategory] = useState<string | null>(null);
@@ -47,6 +56,8 @@ export function ProductSheet({ open, product, categories, defaultCategoryId, onC
     if (!name) return setError('Give the product a name.');
     if (!Number.isInteger(form.quantity) || form.quantity < 0) return setError('Quantity must be a whole number of 0 or more.');
     if (!Number.isInteger(form.minQuantity) || form.minQuantity < 1) return setError('“Buy more when fewer than” must be 1 or more.');
+    const url = normalizeUrl(form.purchaseUrl);
+    if (url === null) return setError('That shop link does not look like a web address. Try something like amazon.com/… or paste the full link.');
     if (newCategory !== null && !newCategory.trim()) return setError('Enter a name for the new category.');
     setSaving(true);
     try {
@@ -60,7 +71,7 @@ export function ProductSheet({ open, product, categories, defaultCategoryId, onC
           await db.categories.add({ id: categoryId, name: catName, emoji: '🏷️', isDefault: false, sortOrder: categories.length });
         }
       }
-      const data: ProductInput = { ...form, name, brand: form.brand.trim(), unit: form.unit.trim(), categoryId };
+      const data: ProductInput = { ...form, name, brand: form.brand.trim(), unit: form.unit.trim(), purchaseUrl: url, categoryId };
       if (product) {
         await updateProduct(product.id, data);
         toast.show('Saved.');
@@ -79,14 +90,16 @@ export function ProductSheet({ open, product, categories, defaultCategoryId, onC
 
   async function remove() {
     if (!product) return;
-    const snapshot = product;
+    const name = product.name;
     setConfirmDelete(false);
-    await deleteProduct(snapshot.id);
+    const entry = await deleteProduct(product.id);
     onClose();
-    toast.show(`"${snapshot.name}" deleted.`, {
+    toast.show(`"${name}" deleted.`, {
       actionLabel: 'Undo',
       duration: 6000,
-      onAction: () => void restoreProduct(snapshot),
+      onAction: () => {
+        if (entry) void undoEntry(entry);
+      },
     });
   }
 
@@ -110,12 +123,7 @@ export function ProductSheet({ open, product, categories, defaultCategoryId, onC
           </Field>
           <Field label="Category" htmlFor="p-cat">
             {newCategory === null ? (
-              <select
-                id="p-cat"
-                className="input"
-                value={form.categoryId}
-                onChange={(e) => (e.target.value === '__new' ? setNewCategory('') : patch('categoryId', e.target.value))}
-              >
+              <select id="p-cat" className="input" value={form.categoryId} onChange={(e) => (e.target.value === '__new' ? setNewCategory('') : patch('categoryId', e.target.value))}>
                 {categories.map((c) => (
                   <option key={c.id} value={c.id}>
                     {c.emoji} {c.name}
@@ -125,7 +133,16 @@ export function ProductSheet({ open, product, categories, defaultCategoryId, onC
               </select>
             ) : (
               <div className="row">
-                <input className="input grow" value={newCategory} onChange={(e) => { setNewCategory(e.target.value); setError(null); }} placeholder="New category name" autoFocus />
+                <input
+                  className="input grow"
+                  value={newCategory}
+                  onChange={(e) => {
+                    setNewCategory(e.target.value);
+                    setError(null);
+                  }}
+                  placeholder="New category name"
+                  autoFocus
+                />
                 <button type="button" className="btn ghost sm" onClick={() => setNewCategory(null)}>
                   Cancel
                 </button>
@@ -145,8 +162,11 @@ export function ProductSheet({ open, product, categories, defaultCategoryId, onC
               </datalist>
             </Field>
           </div>
-          <Field label="Buy more when fewer than" htmlFor="p-min" hint="1 = only when it runs out. Use 2 to always keep a spare. Anything below this shows as running low and goes on the shopping list.">
+          <Field label="Buy more when fewer than" htmlFor="p-min" hint="1 = only when it runs out. Use 2 to always keep a spare. Below this number it shows as running low and goes on the shopping list.">
             <input id="p-min" className="input" type="number" inputMode="numeric" min={1} step={1} value={form.minQuantity} onChange={(e) => patch('minQuantity', numOrZero(e.target.value))} style={{ maxWidth: 140 }} />
+          </Field>
+          <Field label="Where to buy it (optional)" htmlFor="p-url" hint="Paste the shop page. The shopping list gets a “Buy online” button that opens it.">
+            <input id="p-url" className={`input ${error?.includes('shop link') ? 'invalid' : ''}`} type="url" inputMode="url" autoCapitalize="off" autoCorrect="off" spellCheck={false} value={form.purchaseUrl} onChange={(e) => patch('purchaseUrl', e.target.value)} placeholder="e.g. amazon.com/…" />
           </Field>
 
           {error && (
@@ -174,7 +194,7 @@ export function ProductSheet({ open, product, categories, defaultCategoryId, onC
       <ConfirmDialog
         open={confirmDelete}
         title="Delete this product?"
-        message={`"${product?.name}" will be removed from your shelf. You can undo for a few seconds afterwards.`}
+        message={`"${product?.name}" will be removed from your shelf. You can undo this from the top bar afterwards.`}
         confirmLabel="Delete"
         danger
         onConfirm={remove}

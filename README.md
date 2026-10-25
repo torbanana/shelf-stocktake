@@ -3,8 +3,8 @@
 **Use it:** https://torbanana.github.io/shelf-stocktake/ (open on your phone, then "Add to Home Screen").
 Source: https://github.com/torbanana/shelf-stocktake. Every push to `main` redeploys automatically.
 
-A list of what you own with **−** and **+** on every row, a shopping list made from whatever has
-run low, and a small Maltese pup keeping an eye on it all.
+What you own, with **−** and **+** on every row, a shopping list made from whatever has run low,
+and a fluffy blue Maltese under a starry sky.
 
 ## Run it
 
@@ -14,25 +14,29 @@ npm run dev      # opens on http://localhost:5173
 npm run build    # production files in dist/
 ```
 
-Open it on your phone by visiting your computer's address on the same Wi-Fi
-(`npm run dev -- --host` prints it), or deploy the `dist/` folder (see below).
+## The three tabs
 
-## What it does
+- **Overview** – a night-sky hero with the pup, four tiles (none left, running low, stocked, total),
+  the products that need buying, and a per-category breakdown. Tap a tile or category to jump to it.
+  The ⋯ menu here has sample products, backup export/restore and delete-all.
+- **Products** – everything you own. **−** / **+** on each row, never below 0. Items that have run out
+  or are below their minimum float to the top and are highlighted; the rest are alphabetical.
+  Search, category chips, tap a product to edit or delete, + to add.
+- **Shopping** – exactly the products below their minimum, with how many to buy. **Bought** tops a
+  product back up and it drops off the list. If you saved a shop link on the product, a
+  **Buy online** button opens it.
 
-- **My shelf**: every product with name, brand (optional), category, quantity and an optional unit.
-  **−** / **+** on each row to record using something up or buying more. Never goes below 0.
-- **Buy more when fewer than**: each product has a number (default 1). Below it, the product is
-  "running low"; at 0 it is "none left". Both float to the top of every tab and are highlighted.
-  Everything else is alphabetical.
-- **Shopping list**: a card at the top says how many items need buying and opens the shopping
-  page. It lists exactly the low products with how many to buy. **Bought** tops a product back up
-  to its minimum and it drops off the list. The phone's back button returns to the shelf.
-- **Undo**: deleting a product or marking something bought shows a toast with Undo for a few seconds.
-- **Search** by name or brand, and **category tabs**. Tap a product to edit or delete it.
-- **Add** with the + button. Create your own categories from the category dropdown.
-- **⋯ menu**: load/remove sample products, export a JSON backup, restore a backup, delete everything.
-- Soft pastel look, light and dark, with the pup as the app icon (PNG icons for Home Screen).
-- No server or account needed; your data stays on the device.
+## Per-product settings
+
+- **Buy more when fewer than** (default 1 = only when it runs out). Set 2 to always keep a spare.
+  Below this number the product is "running low" and goes on the shopping list.
+- **Where to buy it** – paste the shop page. Shown as "Buy online" on the shopping list.
+
+## Undo
+
+Every change (−/+, bought, add, edit, delete) can be undone. An **↶ Undo** button appears in the top
+bar of every tab whenever there is something to undo; the toast after a delete or a Bought also has
+Undo. The undo history clears when the page reloads.
 
 ## Technical notes
 
@@ -42,30 +46,32 @@ Open it on your phone by visiting your computer's address on the same Wi-Fi
 | External APIs | None. The page needs the network to load, but all data stays on the device. Image recognition would need a vision API and barcode lookup an external product database; neither is included. |
 | Storage | One IndexedDB database called `shelf` with `products` and `categories` tables, on the device only. Clearing browser data wipes it, so the menu has Export/Restore backup. |
 | Accounts / cloud | Not needed. If you later want the same list on two devices, that is the point to add a sync backend. |
-| Deploy | `npm run build`, then upload `dist/` to any static host (Netlify, Vercel, GitHub Pages, Cloudflare Pages). `base: './'` in `vite.config.ts` means it works from any folder. On a phone, "Add to Home Screen" gives an app-like icon (manifest included). |
+| Deploy | `npm run build`, then upload `dist/` to any static host. This repo deploys to GitHub Pages from `.github/workflows/deploy.yml`. |
 
 ## Things deliberately left out (easy to add later)
 
 Expiry dates, storage location, stocktake mode, product photos, image recognition, barcode
-scanning and free-text shopping items were left out to keep the app small. The data model is
-tiny, so any of these can be added as a column on `Product` plus a field in `src/ProductSheet.tsx`.
+scanning and free-text shopping items. The data model is tiny, so any of these can be added as a
+column on `Product` plus a field in `src/ProductSheet.tsx`.
 
 ## Layout
 
 ```
 src/
-  main.tsx            entry
-  App.tsx             two screens switched by the URL hash (#shopping)
-  Inventory.tsx       the shelf: header, shopping card, search, category tabs, sorted list, + button
-  Shopping.tsx        the shopping list page
-  ProductSheet.tsx    add / edit / delete form (bottom sheet)
-  MenuSheet.tsx       samples, backup, delete-all
-  db.ts               Dexie database + default categories
-  types.ts            Product and Category types
-  lib/products.ts     create / update / change quantity / low-stock rules / sorting
-  lib/sample.ts       sample products
-  lib/backup.ts       export / import JSON
-  components/         Pup (mascot SVG), Sheet + ConfirmDialog, Toast, QuantityStepper, EmptyState, Field
-  styles.css          design tokens (light + dark) and components
-public/               favicon.svg (the pup) and PNG icons generated from it
+  main.tsx              entry
+  App.tsx               three tabs switched by the URL hash (#, #products[/category], #shopping)
+  Overview.tsx          hero, tiles, needs-buying, by-category
+  Inventory.tsx         the Products tab
+  Shopping.tsx          the Shopping tab (Buy online + Bought)
+  ProductSheet.tsx      add / edit / delete form (bottom sheet)
+  MenuSheet.tsx         samples, backup, delete-all
+  db.ts                 Dexie database + default categories
+  types.ts              Product and Category types
+  lib/products.ts       changes (all undoable), low-stock rules, sorting, URL helpers
+  lib/undo.ts           the undo stack
+  lib/sample.ts         sample products
+  lib/backup.ts         export / import JSON
+  components/           Pup (mascot), Sky (hero art), TopBar (with Undo), BottomNav, Sheet, Toast, …
+  styles.css            starry-night tokens and components
+public/                 favicon.svg (the pup) and PNG icons generated from it
 ```
