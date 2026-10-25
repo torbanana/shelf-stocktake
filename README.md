@@ -32,6 +32,25 @@ npm run build    # production files in dist/
   Below this number the product is "running low" and goes on the shopping list.
 - **Where to buy it** – paste the shop page. Shown as "Buy online" on the shopping list.
 
+## Keeping the list in a spreadsheet (CSV)
+
+The ⋯ menu on the Overview tab has **Import CSV**, **Export CSV** and **Download CSV template**.
+Export, edit in Excel / Numbers / Google Sheets, save as CSV, import again.
+
+The first row must be headings. Order does not matter and only **Name** is required:
+
+```
+Name,Brand,Category,Quantity,Buy more when fewer than,Unit,Where to buy
+Whitening Toothpaste,Colgate,Oral care,1,2,tubes,https://www.amazon.com/s?k=colgate+whitening+toothpaste
+Hydrating Face Cream,CeraVe,Skincare,1,1,tubs,
+```
+
+- Rows are matched to existing products by Name + Brand (case-insensitive). Matches are
+  updated, everything else is added. Nothing is deleted by an import.
+- A Category that does not exist yet is created. Blank Quantity or minimum means 1.
+- Heading aliases are accepted, e.g. `Qty`, `Min`, `Link`, `URL`.
+- Semicolon-separated files (Excel in some regions) and quoted values with commas are fine.
+
 ## Undo
 
 Every change (−/+, bought, add, edit, delete) can be undone. An **↶ Undo** button appears in the top

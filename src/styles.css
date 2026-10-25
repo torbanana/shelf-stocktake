@@ -298,9 +298,17 @@ a {
   position: relative;
   overflow: hidden;
   border-radius: var(--radius);
-  min-height: 190px;
+  min-height: 210px;
   border: 1px solid var(--border);
   box-shadow: var(--shadow);
+}
+.menu-label {
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-3);
+  margin: 2px 2px -6px;
 }
 .hero-sky {
   position: absolute;
